@@ -36,7 +36,7 @@ func (s *ZgStore) Get(ctx context.Context, key []byte) ([]byte, error) {
 	quorumId := binary.LittleEndian.Uint64(key[10:18])
 	commit := key[10:]
 
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 30*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 180*time.Second)
 	defer cancel()
 	conn, err := grpc.DialContext(
 		ctxWithTimeout,
@@ -104,7 +104,8 @@ func (s *ZgStore) Put(ctx context.Context, value []byte) ([]byte, error) {
 			time.Sleep(3 * time.Second)
 		}
 
-		if blobStatus.GetStatus() == pb.BlobStatus_CONFIRMED || blobStatus.GetStatus() == pb.BlobStatus_FINALIZED {
+		status := blobStatus.GetStatus()
+		if status == pb.BlobStatus_CONFIRMED || status == pb.BlobStatus_FINALIZED {
 			blobHeader := blobStatus.GetInfo().GetBlobHeader()
 
 			var comm []byte
@@ -121,9 +122,15 @@ func (s *ZgStore) Put(ctx context.Context, value []byte) ([]byte, error) {
 			return commitment.Encode(), nil
 		}
 
+		if status == pb.BlobStatus_FAILED {
+			return nil, fmt.Errorf("failed to put blob")
+		}
+
 		retryCount++
 		if retryCount > 60 {
 			return nil, fmt.Errorf("failed to get blob status, retry reached")
 		}
+
+		time.Sleep(3 * time.Second)
 	}
 }
