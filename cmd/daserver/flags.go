@@ -45,7 +45,7 @@ var (
 	ZgServerFlag = &cli.StringFlag{
 		Name:    ZgServerFlagName,
 		Usage:   "zg server endpoint",
-		Value:   "http://localhost:51001",
+		Value:   "localhost:51001",
 		EnvVars: prefixEnvVars("ZG_SERVER"),
 	}
 )

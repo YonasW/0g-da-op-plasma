@@ -11,7 +11,7 @@ The `da-server` connects to a 0G DA client, which runs as a sidecar process.
 [0G DA OPEN API](https://docs.0g.ai/0g-doc/docs/0g-da/rpc-api/api-1)
 
 ````
-    --zg.server    (default: "http://localhost:51001") 
+    --zg.server    (default: "localhost:51001") 
         0G DA client server endpoint
     
     --addr
@@ -32,7 +32,7 @@ The `da-server` connects to a 0G DA client, which runs as a sidecar process.
 
 ### Run DA Server
 ```bash
-    ./bin/da-server --addr 127.0.0.1 --port 3100 --zg.server http://127.0.0.1:51001
+    ./bin/da-server --addr 127.0.0.1 --port 3100 --zg.server 127.0.0.1:51001
 ```
 
 For guidance on setting up a 0G DA client, refer to the [documentation](https://docs.0g.ai/0g-doc/run-a-node/da-client).
