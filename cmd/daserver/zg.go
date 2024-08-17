@@ -14,6 +14,8 @@ import (
 )
 
 const VersionByte = 0x47
+const RequestTimeout = 180 * time.Second
+const MaxReties = 90
 
 type ZgConfig struct {
 	server string
@@ -36,7 +38,7 @@ func (s *ZgStore) Get(ctx context.Context, key []byte) ([]byte, error) {
 	quorumId := binary.LittleEndian.Uint64(key[10:18])
 	commit := key[10:]
 
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 180*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, RequestTimeout)
 	defer cancel()
 	conn, err := grpc.DialContext(
 		ctxWithTimeout,
@@ -63,7 +65,7 @@ func (s *ZgStore) Get(ctx context.Context, key []byte) ([]byte, error) {
 }
 
 func (s *ZgStore) Put(ctx context.Context, value []byte) ([]byte, error) {
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 30*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, RequestTimeout)
 	defer cancel()
 	conn, err := grpc.DialContext(
 		ctxWithTimeout,
@@ -87,7 +89,25 @@ func (s *ZgStore) Put(ctx context.Context, value []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	requestId := reply.GetRequestId()
+	return s.WaitBlobConfirmed(ctx, reply.GetRequestId())
+}
+
+func (s *ZgStore) WaitBlobConfirmed(ctx context.Context, requestId []byte) ([]byte, error) {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, RequestTimeout*2)
+	defer cancel()
+	conn, err := grpc.DialContext(
+		ctxWithTimeout,
+		s.cfg.server,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(1024*1024*1024)), // 1 GiB
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to dial encoder: %w", err)
+	}
+	defer conn.Close()
+
+	client := pb.NewDisperserClient(conn)
+
 	var retryCount uint64
 	for {
 		blobStatus, err := client.GetBlobStatus(ctx, &pb.BlobStatusRequest{
@@ -96,7 +116,7 @@ func (s *ZgStore) Put(ctx context.Context, value []byte) ([]byte, error) {
 
 		if err != nil {
 			retryCount++
-			if retryCount > 60 {
+			if retryCount > MaxReties {
 				return nil, fmt.Errorf("failed to get blob status: %w", err)
 			}
 
@@ -127,7 +147,7 @@ func (s *ZgStore) Put(ctx context.Context, value []byte) ([]byte, error) {
 		}
 
 		retryCount++
-		if retryCount > 60 {
+		if retryCount > MaxReties {
 			return nil, fmt.Errorf("failed to get blob status, retry reached")
 		}
 
