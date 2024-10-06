@@ -1,10 +1,11 @@
-## Optimism 0G Integration Guide
 
 <br />
 <p align="center">
-  <img src="0gxop.jpg" alt="Logo" width="120" height="120">
+  <img src="0gxop.jpg" alt="Logo" width="810" height="520">
   </p>
   
+## Optimism 0G Integration Guide
+
 ### Overview
 
 The Optimism 0G integration allows developers to deploy an OP Stack-based chain using 0G (Zero Gravity) for data availability. This integration offers an alternative to Optimism's default data availability solution, providing a cost-effective and secure option for storing transaction data.
