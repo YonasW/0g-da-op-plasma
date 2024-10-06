@@ -1,9 +1,17 @@
 
 <br />
 <p align="center">
-  <img src="0gxop.jpg" alt="Logo" width="810" height="520">
+  <p align="center" href="https://arbitrum.io/">
+  <img src="https://res.coinpaper.com/coinpaper/optimism_logo_6eba6a0c5c.png" alt="Logo" width="120" height="120">
   </p>
-  
+  <h3 align="center">X</h3>
+  <p align="center" href="https://0g.ia/">
+  <img src="https://framerusercontent.com/images/JJi9BT4FAjp4W63c3jjNz0eezQ.png" alt="Logo" width="140" height="140">
+  </p>
+    <br />
+  </p>
+</p>
+
 ## Optimism 0G Integration Guide
 
 ### Overview
@@ -27,7 +35,7 @@ The core logic for posting and retrieving data is implemented in the da-server. 
 ### Setting Up Your Chain
 
 1. Deploy da-server:
-   - Follow the deployment instructions in the da-server README.
+   - Follow the deployment instructions in the da-server [README.](./OP%20Stack%20integration.md)
 
 2. Deploy OP Stack components:
    - Modify the `rollup.json` configuration for op-node.
@@ -35,13 +43,6 @@ The core logic for posting and retrieving data is implemented in the da-server. 
 
 3. Start the system:
    - Launch all components following Optimism's general instructions with the 0G-specific modifications.
-
-### Important Notes
-
-- This integration is in beta, with ongoing active development.
-- Ensure proper firewall configuration for all necessary ports.
-- Refer to [Optimism documentation](https://docs.optimism.io/) for additional configuration options and troubleshooting.
-
 ### Learn More About 0G
 
 [0G Website](https://0g.ai/)
@@ -54,3 +55,4 @@ The core logic for posting and retrieving data is implemented in the da-server. 
 
 ## Guidance to run OP Stack with 0G DA
 [How to Use the OP Stack with 0G DA](./OP%20Stack%20integration.md)
+- Refer to [Optimism documentation](https://docs.optimism.io/) for additional configuration options and troubleshooting.
