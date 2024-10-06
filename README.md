@@ -1,57 +1,62 @@
-# Optimism Alt-DA x 0G DA:
+## Optimism 0G Integration Guide
 
-## Overview:
+<br />
+<p align="center">
+  <p align="center" href="https://optimism.io/">
+  <img src="https://www.dropbox.com/scl/fi/z0skana9otxqlxqopcofa/Optimism-Red-48.svg?rlkey=hgxop0kdzplncn199kwbqzkui&e=1&dl=0" alt="Logo" width="120" height="120">
+  </p>
+  <h3 align="center">+</h3>
+  <p align="center" href="0g.ia/">
+  <img src="https://drive.google.com/file/d/1kPUEcdTAzZgfyIZ9A41XMUE4p6LPYL-H/view" alt="Logo" width="140" height="140">
+  </p>
+    <br />
+  </p>
+</p>
+### Overview
 
-This repository implements a 0gDA `da-server` for Alt-DA mode using generic
-commitments.
+The Optimism 0G integration allows developers to deploy an OP Stack-based chain using 0G (Zero Gravity) for data availability. This integration offers an alternative to Optimism's default data availability solution, providing a cost-effective and secure option for storing transaction data.
 
-The `da-server` connects to a 0G DA client, which runs as a sidecar process.
+### Key Components
 
-0G DA da-server accepts the following flags for 0g DA storage using
-[0G DA OPEN API](https://docs.0g.ai/0g-doc/docs/0g-da/rpc-api/api-1)
+1. DA Server: Implements the data availability server interface for 0G DA.
+2. OP Stack Configuration: Customizes the OP Stack components to work with 0G DA.
+3. 0G Integration: Ensures data integrity and availability through 0G's network.
 
-````
-    --zg.server    (default: "localhost:51001") 
-        0G DA client server endpoint
-    
-    --addr
-        server listening address
-    
-    --port
-        server listening port
-````
+### 0G DA Server Implementation
 
+The core logic for posting and retrieving data is implemented in the da-server. Key features include:
 
-## Deployment
+- DA Server: Manages the connection to the 0G DA client.
+- HTTP Server: Handles requests from OP Stack components for data storage and retrieval.
+- Integration with OP Stack: Ensures seamless communication between Optimism components and 0G DA.
 
-### Build DA Server
+### Setting Up Your Chain
 
-```bash
-    make da-server
-```
+1. Deploy da-server:
+   - Follow the deployment instructions in the da-server README.
 
-### Run DA Server
-```bash
-    ./bin/da-server --addr 127.0.0.1 --port 3100 --zg.server 127.0.0.1:51001
-```
+2. Deploy OP Stack components:
+   - Modify the `rollup.json` configuration for op-node.
+   - Set specific CLI configurations for op-node and op-batcher.
 
-For guidance on setting up a 0G DA client, refer to the [documentation](https://docs.0g.ai/0g-doc/run-a-node/da-client).
+3. Start the system:
+   - Launch all components following Optimism's general instructions with the 0G-specific modifications.
 
+### Important Notes
 
-## Run with Docker
-Build the Docker image
+- This integration is in beta, with ongoing active development.
+- Ensure proper firewall configuration for all necessary ports.
+- Refer to [Optimism documentation](https://docs.optimism.io/) for additional configuration options and troubleshooting.
 
-```bash
-docker build -t 0g-da-op-plasma .
-```
+### Learn More About 0G
 
-Run the Docker container
+[0G Website](https://0g.ai/)
+[0G Github](https://github.com/0glabs)
 
-Adjust commands and parameters as required for your setup:
+### Learn More About Optimism
 
-```bash
-docker run -p 3100:3100 0g-da-op-plasma:latest da-server --addr 0.0.0.0 --port 3100 --zg.server 127.0.0.1:51001
-```
+[Optimism Documentation](https://docs.optimism.io/)
+[OP Stack Github](https://github.com/ethereum-optimism/optimism)
 
 ## Guidance to run OP Stack with 0G DA
 [How to Use the OP Stack with 0G DA](./OP%20Stack%20integration.md)
